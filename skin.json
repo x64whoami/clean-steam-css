@@ -1,0 +1,27 @@
+{
+    "author": "whoami",
+    "description": "Remove round corners and shadows from steam via, css",
+    "name": "clean steam",
+	
+    "discord_support": {
+        "inviteCodeExcludingLink": "000000"
+    },
+    "github": {
+        "owner": "x64whoami",
+        "repo_name": "clean-steam-css"
+    },
+    "tags": [
+        "Minimal"
+    ],
+    "version": "1.0.0",
+
+    "Steam-WebKit": "webkit.css",
+	 "Patches": [
+        {
+            "MatchRegexString": "^Steam$",
+            "TargetCss": "steam.css"
+        }
+    ],
+	
+    "UseDefaultPatches": true
+}

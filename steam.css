@@ -1,0 +1,144 @@
+/**
+ * @description Remove round corners & shadows.
+ */
+
+/* 1. Base: pseudo-elements included, specificity raised.
+   :root is in the list because the :not(#_) pattern skips <html> */
+:root,
+:root :not(#_):not(#_),
+:root :not(#_):not(#_)::before,
+:root :not(#_):not(#_)::after,
+:root :not(#_):not(#_)::file-selector-button {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 2. Legacy prefixed shadow. Old WebKit/Gecko only.
+   Drop it if you only target current browsers */
+:root :not(#_):not(#_) {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+}
+
+/* 3. Vendor pseudos. Keep one engine per rule:
+   an unknown pseudo invalidates the whole list */
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track,
+::-webkit-slider-runnable-track,
+::-webkit-slider-thumb,
+::-webkit-progress-bar,
+::-webkit-progress-value,
+::-webkit-meter-bar,
+::-webkit-meter-optimum-value,
+::-webkit-meter-suboptimum-value,
+::-webkit-meter-even-less-good-value {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+::-moz-range-thumb,
+::-moz-range-track,
+::-moz-range-progress,
+::-moz-progress-bar,
+::-moz-meter-bar {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 4. range/progress/meter only honor radius and shadow once appearance is none */
+input[type=range],
+progress,
+meter {
+    appearance: none;
+}
+
+/* 5. Native checkbox/radio ignore border-radius. Rebuild them as boxes */
+input[type=checkbox],
+input[type=radio] {
+    appearance: none;
+    box-sizing: border-box;
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    vertical-align: -0.15em;
+    border: 2px solid currentColor;
+    padding: 2px;
+    background: transparent;
+    background-clip: content-box;
+}
+input[type=radio] {
+    padding: 3px; /* keeps radio visually distinct */
+}
+input[type=checkbox]:checked,
+input[type=radio]:checked {
+    background-color: currentColor;
+}
+
+/* 6. Clipped/masked media only. Scoped on purpose */
+:is(img, video, canvas, picture, [class*="avatar" i], [class*="profile" i]) {
+    clip-path: none !important;
+    mask: none !important;
+    -webkit-mask: none !important;
+}
+
+/* 7. SVG: square rects, butt caps, miter joins */
+rect {
+    rx: 0 !important;
+    ry: 0 !important;
+}
+svg,
+svg * {
+    stroke-linecap: butt !important;
+    stroke-linejoin: miter !important;
+}
+/* SVG filter shadows. feDropShadow takes flood-opacity as CSS */
+feDropShadow {
+    flood-opacity: 0 !important;
+}
+
+/* 8. Square list bullets. Zero specificity (:where) so site resets
+   (list-style: none) still win */
+:where(ul, ul ul, ul ul ul) {
+    list-style-type: square;
+}
+
+/* text-shadow: intentionally untouched */
+
+/* ------------------------------------------------------------------
+   OPT-IN BLOCKS. Both are commented out. Uncomment what you want.
+   ------------------------------------------------------------------ */
+
+/* OPT-IN A. Removes ALL filters, not just drop-shadow.
+   CSS cannot remove one function from a filter list.
+:root :not(#_):not(#_) {
+    filter: none !important;
+    backdrop-filter: none !important;
+}
+*/
+
+/* OPT-IN A, scoped variant. Use this instead of the block above
+   if you only need it for known elements.
+img, svg, [class*="shadow" i] {
+    filter: none !important;
+}
+*/
+
+/* OPT-IN B. Focus ring fallback. Tailwind ring-* and many design systems
+   draw focus indicators with box-shadow. Removing it is an accessibility
+   regression. Uncomment this to restore a visible indicator.
+:focus-visible {
+    outline: 2px solid currentColor !important;
+    outline-offset: 2px;
+}
+*/
+
+/* ------------------------------------------------------------------
+   NOT COVERED (for reference)
+   - Shadow DOM is not pierced. Components keep their own shadows unless
+     they expose ::part() or you inject the sheet into the root.
+   - Inline style="box-shadow: ... !important" beats this sheet.
+     Plain inline styles lose, because !important wins.
+   - ::marker, ::first-line, ::first-letter do not support box-shadow.
+   - Fake shadows built with outline, border, or stacked gradients in
+     background are not caught.
+   ------------------------------------------------------------------ */
